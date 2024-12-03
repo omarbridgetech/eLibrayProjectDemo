@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null; // Or specify a layout if applicable
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Navigation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> <!-- Optional for styling -->
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h2>Navigate to Another Page</h2>
+        <form asp-controller="Book" asp-action="Index" method="get">
+            <button type="submit" class="btn btn-primary">Go to Another Page</button>
+        </form>
+    </div>
+</body>
+</html>

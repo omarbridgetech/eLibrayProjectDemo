@@ -1,0 +1,78 @@
+﻿@model List<Book>
+@{
+	int pageIndex=(int)ViewData["PageIndex"]!;
+	int totalPages=(int)ViewData["TotalPage"]!;
+
+	string search=(string)ViewData["Search"]!;
+}
+<h2 class="text-center mb-5">List of Books</h2>
+
+<div class="row mb-5">
+	<div class="col">
+		<a class="btn btn-primary" asp-controller="Book" asp-action="AddBook">New Book</a>
+	</div>
+	<div class="col">
+		<form class="d-flex" role="search">
+			<input class="form-control me-2" type="search" name="search" value="@search" placeholder="Search" aria-label="Search">
+			<button class="btn btn-outline-success" type="submit">Search</button>
+		</form>
+	</div>
+</div> 
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style="cursor: pointer;" onclick="sortTable('EbookId')">ID</th>
+			<th style="cursor: pointer;" onclick="sortTable('Title')">Title</th>
+			<th style="cursor: pointer;" onclick="sortTable('Author')">Author</th>
+			<th style="cursor: pointer;" onclick="sortTable('Publisher')">Publisher</th>
+			<th style="cursor: pointer;" onclick="sortTable('PriceBorow')">Price to Borow</th>
+			<th style="cursor: pointer;" onclick="sortTable('PriceBuy')">Price to Buy</th>
+			<th style="cursor: pointer;" onclick="sortTable('AvailableCopies')">Available Copies</th>
+			<th style="cursor: pointer;" onclick="sortTable('IsBuyOnly')">Is Buy Only</th>
+			<th style="cursor: pointer;" onclick="sortTable('Catagory')">Catagory</th>
+			<th">Image</th>
+			<th">Action</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var book in Model ){
+			<tr>
+				<td>@book.EbookId</td>
+				<td>@book.Title</td>
+				<td>@book.Author</td>
+				<td>@book.Publisher</td>
+				<td>@book.PriceBorrow</td>
+				<td>@book.PriceBuy</td>
+				<td>@book.AvailableCopies</td>
+				<td>@book.IsBuyOnly</td>
+				<td>@book.Category</td>
+				<td><img src="/Books-cover/@book.CoverImagePath" width="100" /></td>
+				<td>
+					<td style="white-space:nowrap">
+						<a class="btn btn-primary btn-sm" asp-controller="Book" asp-action="EditBook" asp-route-id="@book.EbookId">Edit</a>
+						<a class="btn btn-danger btn-sm" asp-controller="Book" asp-action="DeleteBook" asp-route-id="@book.EbookId" onclick="return confirm('Are you sure?')">Delete</a>
+					</td>
+
+
+
+
+
+			</tr>
+		}
+	</tbody>
+</table>
+
+<nav >
+	<ul class="pagination">
+		@for(int i=1;i<=totalPages;i++){
+
+			string active = "";
+			if (i == pageIndex) active = "active";
+			<li class="page-item @active"><a class="page-link" asp-route-pageIndex="@i" asp-route-search="@search">@i</a></li>
+
+		}
+	</ul>
+</nav>
+

@@ -1,0 +1,138 @@
+﻿@model BookDto
+@{
+}
+<div>
+    <div class="col-md-8 mx-auto rounded border p-3">
+        <h2 class="text-center mb-5">New Book</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Title</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Title" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Author</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Author" />
+                    <span asp-validation-for="Author" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Publisher</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Publisher" />
+                    <span asp-validation-for="Publisher" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Format</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Formats" />
+                    <span asp-validation-for="Formats" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Price to Borrow</label>
+                <div class="col-sm-8">
+                    <input type="range" class="form-range" asp-for="PriceBorrow" min="0" max="1000" step="1" oninput="document.getElementById('borrowPrice').value = this.value;" />
+                    <input type="text" id="borrowPrice" class="form-control mt-2" value="0" readonly />
+                    <span asp-validation-for="PriceBorrow" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Price to Buy</label>
+                <div class="col-sm-8">
+                    <input type="range" class="form-range" asp-for="PriceBuy" min="0" max="5000" step="1" oninput="document.getElementById('buyPrice').value = this.value;" />
+                    <input type="text" id="buyPrice" class="form-control mt-2" value="0" readonly />
+                    <span asp-validation-for="PriceBuy" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Age Rating</label>
+                <div class="col-sm-8">
+                    <select class="form-select" asp-for="AgeRating">
+                        <option value="+8">+8</option>
+                        <option value="+12">+12</option>
+                        <option value="+16">+16</option>
+                        <option value="+18">+18</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Available Copies</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="AvailableCopies" type="number" min="0" />
+                    <span asp-validation-for="AvailableCopies" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Book-Cover</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="CoverImage" />
+                    <span asp-validation-for="CoverImage" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Description</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" asp-for="Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Publication-Year</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="PublicationYear" type="number" min="1000" max="2025" placeholder="Enter year (e.g., 2024)" />
+                    <span asp-validation-for="PublicationYear" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Is Buy only</label>
+                <div class="col-sm-8">
+                    <select class="form-select" asp-for="IsBuyOnly">
+                        <option value="False">No</option>
+                        <option value="True">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Category</label>
+                <div class="col-sm-8">
+                    <select class="form-select" asp-for="Category">
+                        <option value="Fiction">Fiction</option>
+                        <option value="NonFiction">Non-Fiction</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="ScienceFiction">Science Fiction</option>
+                        <option value="Fantasy">Fantasy</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="offset-sm-4 col-sm-4 d-grid">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <div class="col-sm-4 d-grid">
+                    <a class="btn btn-outline-primary" asp-controller="Book" asp-action="Index" role="button">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
