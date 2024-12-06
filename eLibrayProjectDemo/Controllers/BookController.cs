@@ -5,6 +5,7 @@ using Microsoft.SqlServer.Server;
 
 namespace eLibrayProjectDemo.Controllers
 {
+    [Route("/Admin/[controller]/{action=Index}/{id?}")]
     public class BookController : Controller
     {
         private readonly AppDbContext contex;
