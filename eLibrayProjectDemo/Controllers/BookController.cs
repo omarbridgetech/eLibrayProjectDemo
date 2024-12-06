@@ -17,7 +17,7 @@ namespace eLibrayProjectDemo.Controllers
             this.contex = contex;
             this.environment = environment;
         }
-        public IActionResult Index(int pageIndex,string? search)
+        public IActionResult Index(int pageIndex,string? search,string? column,string? orderBy)
         {
             IQueryable<Book> query = contex.Books;
 
@@ -27,7 +27,74 @@ namespace eLibrayProjectDemo.Controllers
             {
                 query=query.Where(p=>p.Title.Contains(search)||p.Category.Contains(search)||p.Author.Contains(search)||p.Publisher.Contains(search));
             }
-            query = query.OrderByDescending(p => p.EbookId);
+
+            //Sort-func...
+            string[] validColumns = { "Category", "IsBuyOnly", "AvailableCopies", "PriceBuy", "PriceBorrow", "Publisher", "Author", "Title", "EbookId" };
+            string[] validOrderBy = {"desc","asc"};
+
+            if (!validColumns.Contains(column)) { column = "EbookId"; }
+            if (!validOrderBy.Contains(orderBy)) { orderBy = "desc"; }
+            //1. sort-by-title
+            if(column== "Title")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.Title); }
+                else { query = query.OrderByDescending(p => p.Title); }
+            }
+            //2. sort-by-Catagory
+            else if (column == "Category")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.Category); }
+                else { query = query.OrderByDescending(p => p.Category); }
+            }
+            //3.sort-by-IsBuyOnly
+            else if (column == "IsBuyOnly")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.IsBuyOnly); }
+                else { query = query.OrderByDescending(p => p.IsBuyOnly); }
+            }
+            //4.sort-by-PriceBuy
+            else if (column == "PriceBuy")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.PriceBuy); }
+                else { query = query.OrderByDescending(p => p.PriceBuy); }
+            }
+            //5.sort-by-AvailableCopies
+            else if (column == "AvailableCopies")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.AvailableCopies); }
+                else { query = query.OrderByDescending(p => p.AvailableCopies); }
+            }
+            //6.sort-by-PriceBorow
+            else if (column == "PriceBorrow")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.PriceBorrow); }
+                else { query = query.OrderByDescending(p => p.PriceBorrow); }
+            }
+            //7.sort-by-Author
+            else if (column == "Author")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.Author); }
+                else { query = query.OrderByDescending(p => p.Author); }
+            }
+            //8.sort-by-Publisher
+            else if (column == "Publisher")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.Publisher); }
+                else { query = query.OrderByDescending(p => p.Publisher); }
+            }
+            //9.sort-by-Id
+            else if (column == "EbookId")
+            {
+                if (orderBy == "asc") { query = query.OrderBy(p => p.EbookId); }
+                else { query = query.OrderByDescending(p => p.EbookId); }
+            }
+
+
+
+
+
+            //query = query.OrderByDescending(p => p.EbookId);
+
 
             //pagination functionality
 
@@ -45,6 +112,9 @@ namespace eLibrayProjectDemo.Controllers
             ViewData["PageIndex"]=pageIndex;
             ViewData["TotalPage"]=totalPages;
             ViewData["Search"] = search ?? "";
+
+            ViewData["Column"] = column;
+            ViewData["OrderBy"]=orderBy;
              return View(books);
         }
 

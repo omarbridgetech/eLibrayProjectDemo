@@ -1,9 +1,22 @@
-﻿@model List<Book>
+﻿@using Microsoft.AspNetCore.Html
+@model List<Book>
 @{
 	int pageIndex=(int)ViewData["PageIndex"]!;
 	int totalPages=(int)ViewData["TotalPage"]!;
 
 	string search=(string)ViewData["Search"]!;
+
+	string column = (string)ViewData["Column"]!;
+
+	string orderBy = (string)ViewData["OrderBy"]!;
+
+	HtmlString getArrow(string tableColumn){
+
+		if (tableColumn != column) return new HtmlString("");
+		if (orderBy == "desc") { return new HtmlString("<i class='bi bi-arrow-up-circle-fill'></i>"); }
+		return new HtmlString("<i class='bi bi-arrow-down-circle-fill'></i>");
+
+	}
 }
 <h2 class="text-center mb-5">List of Books</h2>
 
@@ -19,20 +32,37 @@
 	</div>
 </div> 
 
+<script>
+	function sortTable(column){
+		let orderBy="desc"
+		let currentColumn="@column";
+		let currentOrder="@orderBy";
+		if(column==currentColumn){
+			if(currentOrder=="asc") orderBy="desc";
+			else orderBy="asc";
+		}
+		window.location.href="?search=@(search)&column=" + column + "&orderBy=" +orderBy
+	}
+
+	
+
+</script>
+
+
 <table class="table">
 	<thead>
 		<tr>
-			<th style="cursor: pointer;" onclick="sortTable('EbookId')">ID</th>
-			<th style="cursor: pointer;" onclick="sortTable('Title')">Title</th>
-			<th style="cursor: pointer;" onclick="sortTable('Author')">Author</th>
-			<th style="cursor: pointer;" onclick="sortTable('Publisher')">Publisher</th>
-			<th style="cursor: pointer;" onclick="sortTable('PriceBorow')">Price to Borow</th>
-			<th style="cursor: pointer;" onclick="sortTable('PriceBuy')">Price to Buy</th>
-			<th style="cursor: pointer;" onclick="sortTable('AvailableCopies')">Available Copies</th>
-			<th style="cursor: pointer;" onclick="sortTable('IsBuyOnly')">Is Buy Only</th>
-			<th style="cursor: pointer;" onclick="sortTable('Catagory')">Catagory</th>
-			<th">Image</th>
-			<th">Action</th>
+			<th style="cursor: pointer;" onclick="sortTable('EbookId')">ID @getArrow("EbookId")</th>
+			<th style="cursor: pointer;" onclick="sortTable('Title')">Title @getArrow("Title")</th>
+			<th style="cursor: pointer;" onclick="sortTable('Author')">Author @getArrow("Author")</th>
+			<th style="cursor: pointer;" onclick="sortTable('Publisher')">Publisher @getArrow("Publisher")</th>
+			<th style="cursor: pointer;" onclick="sortTable('PriceBorrow')">Price to Borow @getArrow("PriceBorrow")</th>
+			<th style="cursor: pointer;" onclick="sortTable('PriceBuy')">Price to Buy @getArrow("PriceBuy")</th>
+			<th style="cursor: pointer;" onclick="sortTable('AvailableCopies')">Available Copies @getArrow("AvailableCopies")</th>
+			<th style="cursor: pointer;" onclick="sortTable('IsBuyOnly')">Is Buy Only @getArrow("IsBuyOnly")</th>
+			<th style="cursor: pointer;" onclick="sortTable('Category')">Catagory @getArrow("Category")</th>
+			<th>Image</th>
+			<th>Action</th>
 		</tr>
 	</thead>
 
@@ -70,7 +100,7 @@
 
 			string active = "";
 			if (i == pageIndex) active = "active";
-			<li class="page-item @active"><a class="page-link" asp-route-pageIndex="@i" asp-route-search="@search">@i</a></li>
+			<li class="page-item @active"><a class="page-link" asp-route-pageIndex="@i" asp-route-search="@search" asp-route-column="@column" asp-route-orderBy="@orderBy">@i</a></li>
 
 		}
 	</ul>
