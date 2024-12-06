@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<Book>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Home Page";
     ViewData["HomePage"] = true;
@@ -31,7 +32,33 @@
         </div>
     </div>
 </div>
+<div class="bg-ligth">
+    <div class="container py-4">
+        <h2 class="pb-4 text-center">Newest Books</h2>
+        <div class="row mb-5 g-3">
+            @foreach(var book in Model){
+               <div class="col-lg-3 col-md-6">
+                   <div class="rounded border shadow p-3 text-center h-100">
+                       <img src="/Books-cover/@book.CoverImagePath" class="img-fluid" alt="..." style="height:180px; object-fit:contain"/>
+                       <hr />
+                       <h5 class="py-2">@book.Title</h5>
+                       <p>Author: @book.Author, Catagory:@book.Category</p>
+                       <h4 class="mb-3">@(book.PriceBuy)$</h4>
+                       <a class="btn btn-primary btn-sm mb-2" href="#" role="button">Details</a>
+                       <button type="button" class="btn btn-warning btn-sm mb-2">
+                           Add to Cart <i class="bg-info bi-cart4"></i>
+                       </button>
+                        <button type="button" class="btn btn-warning btn-sm mb-2">
+                            Borrow <i class="bg-info bi-cart4"></i>
+                        </button>
+                   </div>
 
+               </div>
+            }
+        </div>
+    </div>
+
+</div>
 <div class="container mt-5">
     <div class="row text-center">
         <div class="col-md-4">
