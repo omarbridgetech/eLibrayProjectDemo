@@ -34,3 +34,15 @@
         </div>
     }
 </div>
+
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.totalPages; i++)
+        {
+            string active = "";
+            if (i == ViewBag.pageIndex) active = "active";
+            <li class="page-item @active"><a class="page-link" asp-route-pageIndex="@i">@i</a></li>
+        }
+    </ul>
+</nav>
