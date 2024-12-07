@@ -20,7 +20,7 @@ namespace eLibrayProjectDemo.Controllers
             var books = context.Books.OrderByDescending(p => p.EbookId).ToList();
             return View(books);
 
-            return View();
+            
         }
     }
 }
