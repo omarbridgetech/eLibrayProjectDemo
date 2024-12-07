@@ -125,6 +125,25 @@
                 </div>
             </div>
 
+            
+
+            <div class="mb-3">
+                <label for="PdfFile" class="form-label">PDF File</label>
+                <input class="form-control" asp-for="PdfFile" type="file" />
+            </div>
+            <div class="mb-3">
+                <label for="EpubFile" class="form-label">ePub File</label>
+                <input class="form-control" asp-for="EpubFile" type="file" />
+            </div>
+            <div class="mb-3">
+                <label for="MobiFile" class="form-label">Mobi File</label>
+                <input class="form-control" asp-for="MobiFile" type="file" />
+            </div>
+            <div class="mb-3">
+                <label for="F2bFile" class="form-label">F2B File</label>
+                <input class="form-control" asp-for="F2bFile" type="file" />
+            </div>
+
             <div class="row">
                 <div class="offset-sm-4 col-sm-4 d-grid">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -133,6 +152,7 @@
                     <a class="btn btn-outline-primary" asp-controller="Book" asp-action="Index" role="button">Cancel</a>
                 </div>
             </div>
+
         </form>
     </div>
 </div>

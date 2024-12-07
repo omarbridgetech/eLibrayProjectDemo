@@ -43,5 +43,11 @@ namespace eLibrayProjectDemo.Models
         public string Category { get; set; } = "Book-Category";
 
         public string Description { get; set; } = "Book-Description";
+
+        // Add these fields for file uploads
+        public IFormFile? PdfFile { get; set; }
+        public IFormFile? EpubFile { get; set; }
+        public IFormFile? MobiFile { get; set; }
+        public IFormFile? F2bFile { get; set; }
     }
 }

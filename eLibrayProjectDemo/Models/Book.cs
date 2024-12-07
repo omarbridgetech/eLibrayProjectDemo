@@ -48,5 +48,18 @@ namespace eLibrayProjectDemo.Models
         public string Description { get; set; } = "Book-Description";
 
         public DateTime AddedAt { get; set; }
+
+        // New Field: Discount Start Date
+        public DateTime? DiscountStartDate { get; set; }
+
+        //newfield
+
+        public decimal? PreviousPrice { get; set; } // Nullable to indicate no previous price by default
+
+        // File paths for different formats
+        public string? PdfFilePath { get; set; }
+        public string? EpubFilePath { get; set; }
+        public string? MobiFilePath { get; set; }
+        public string? F2bFilePath { get; set; }
     }
 }

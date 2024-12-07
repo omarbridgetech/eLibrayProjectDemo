@@ -1,6 +1,7 @@
 ﻿using eLibrayProjectDemo.Models;
 using eLibrayProjectDemo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 
 namespace eLibrayProjectDemo.Controllers
@@ -150,6 +151,48 @@ namespace eLibrayProjectDemo.Controllers
 
             //save the new book into the database
 
+            // Save additional format files
+            string bookDirectory = Path.Combine(environment.WebRootPath, "Books-files", Guid.NewGuid().ToString());
+            Directory.CreateDirectory(bookDirectory);
+
+            string? pdfPath = null, epubPath = null, mobiPath = null, f2bPath = null;
+
+            if (bookDto.PdfFile != null)
+            {
+                pdfPath = Path.Combine(bookDirectory, bookDto.PdfFile.FileName); // Retain original file name
+                using (var stream = new FileStream(pdfPath, FileMode.Create))
+                {
+                    bookDto.PdfFile.CopyTo(stream);
+                }
+            }
+
+            if (bookDto.EpubFile != null)
+            {
+                epubPath = Path.Combine(bookDirectory, bookDto.EpubFile.FileName); // Retain original file name
+                using (var stream = new FileStream(epubPath, FileMode.Create))
+                {
+                    bookDto.EpubFile.CopyTo(stream);
+                }
+            }
+
+            if (bookDto.MobiFile != null)
+            {
+                mobiPath = Path.Combine(bookDirectory, bookDto.MobiFile.FileName); // Retain original file name
+                using (var stream = new FileStream(mobiPath, FileMode.Create))
+                {
+                    bookDto.MobiFile.CopyTo(stream);
+                }
+            }
+
+            if (bookDto.F2bFile != null)
+            {
+                f2bPath = Path.Combine(bookDirectory, bookDto.F2bFile.FileName); // Retain original file name
+                using (var stream = new FileStream(f2bPath, FileMode.Create))
+                {
+                    bookDto.F2bFile.CopyTo(stream);
+                }
+            }
+
             Book book = new Book()
             {
                 Title = bookDto.Title,
@@ -166,6 +209,10 @@ namespace eLibrayProjectDemo.Controllers
                 Description = bookDto.Description,
                 CoverImagePath = newFileName,
                 AddedAt = DateTime.Now,
+                PdfFilePath = pdfPath,
+                EpubFilePath = epubPath,
+                MobiFilePath = mobiPath,
+                F2bFilePath = f2bPath
 
             };
             //Add the book to DB-Table
@@ -289,6 +336,78 @@ namespace eLibrayProjectDemo.Controllers
 
 
         }
+
+
+        public IActionResult DiscountBook(int id)
+        {
+            // Find the book to apply a discount
+            var book = contex.Books.Find(id);
+            if (book == null)
+            {
+                return RedirectToAction("Index", "Book");
+            }
+
+            // Create a BookDto and populate it with the current data
+            var bookDto = new BookDto()
+            {
+                Title = book.Title,
+                Author = book.Author,
+                Publisher = book.Publisher,
+                Formats = book.Formats,
+                PriceBuy = book.PriceBuy, // Current price
+                AvailableCopies = book.AvailableCopies,
+                Category = book.Category,
+                Description = book.Description,
+                PublicationYear = book.PublicationYear,
+                IsBuyOnly = book.IsBuyOnly,
+                AgeRating = book.AgeRating,
+            };
+
+            ViewData["EbookId"] = book.EbookId;
+            ViewData["CurrentPrice"] = book.PriceBuy; // Display the current price in the view
+            return View(bookDto);
+        }
+
+        [HttpPost]
+        public IActionResult DiscountBook(int id, BookDto bookDto)
+        {
+            var book = contex.Books.Find(id);
+            if (book == null)
+            {
+                return RedirectToAction("Index", "Book");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["EbookId"] = book.EbookId;
+                ViewData["CurrentPrice"] = book.PriceBuy;
+                return View(bookDto);
+            }
+
+            // Check if the new price is less than the current price
+            if (bookDto.PriceBuy >= book.PriceBuy)
+            {
+                ModelState.AddModelError("PriceBuy", "The new price must be less than the current price.");
+                ViewData["EbookId"] = book.EbookId;
+                ViewData["CurrentPrice"] = book.PriceBuy;
+                return View(bookDto);
+            }
+
+            // Update the book's price and discount details
+            book.PreviousPrice = book.PriceBuy; // Save the original price
+            book.PriceBuy = bookDto.PriceBuy;   // Apply the new discounted price
+            book.DiscountStartDate = DateTime.Now; // Set the discount start date
+
+            // Save the changes
+            contex.SaveChanges();
+            return RedirectToAction("Index", "Book");
+        }
+
+
+
+
+
+
 
 
     }

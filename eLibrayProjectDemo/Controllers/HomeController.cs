@@ -13,8 +13,14 @@ namespace eLibrayProjectDemo.Controllers
         }
         public IActionResult Index()
         {
-            var books=context.Books.OrderByDescending(x => x.EbookId).Take(4).ToList();
+            var books = context.Books
+                .OrderByDescending(x => x.EbookId)
+                .Take(4)
+                .ToList();
+
             return View(books);
         }
+
+
     }
 }

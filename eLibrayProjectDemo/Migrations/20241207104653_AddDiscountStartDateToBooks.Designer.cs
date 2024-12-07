@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eLibrayProjectDemo.Services;
 
@@ -11,9 +12,11 @@ using eLibrayProjectDemo.Services;
 namespace eLibrayProjectDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241207104653_AddDiscountStartDateToBooks")]
+    partial class AddDiscountStartDateToBooks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,27 +63,12 @@ namespace eLibrayProjectDemo.Migrations
                     b.Property<DateTime?>("DiscountStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EpubFilePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("F2bFilePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Formats")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsBuyOnly")
                         .HasColumnType("bit");
-
-                    b.Property<string>("MobiFilePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PdfFilePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PreviousPrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PriceBorrow")
                         .HasColumnType("decimal(18,2)");
