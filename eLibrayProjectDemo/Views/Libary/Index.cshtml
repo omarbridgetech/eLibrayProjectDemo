@@ -1,48 +1,88 @@
-﻿@model List<Book>
+﻿@model LibarySearchModel
 
 <h2 class="pb-4 text-center">Books</h2>
-<div class="row mb-5 g-3">
-    @foreach (var book in Model)
-    {
-        var hasDiscount = book.DiscountStartDate.HasValue && (DateTime.Now - book.DiscountStartDate.Value).TotalDays <= 7;
 
-        <div class="col-lg-3 col-md-6">
-            <div class="rounded border shadow p-3 text-center h-100">
-                <img src="/Books-cover/@book.CoverImagePath" class="img-fluid" alt="..." style="height:180px; object-fit:contain" />
-                <hr />
-                <h5 class="py-2">@book.Title</h5>
-                <p>Author: @book.Author, Category: @book.Category</p>
-                <h4 class="mb-3">
-                    @if (hasDiscount)
-                    {
-                        <span class="text-muted text-decoration-line-through">@book.PreviousPrice.Value $</span>
-                        <span class="text-danger">@book.PriceBuy $</span>
-                    }
-                    else
-                    {
-                        <span>@book.PriceBuy $</span>
-                    }
-                </h4>
-                <a class="btn btn-primary btn-sm mb-2" href="#" role="button">Details</a>
-                <button type="button" class="btn btn-warning btn-sm mb-2">
-                    Add to Cart <i class="bg-info bi-cart4"></i>
-                </button>
-                <button type="button" class="btn btn-warning btn-sm mb-2">
-                    Borrow <i class="bg-info bi-cart4"></i>
-                </button>
+<form class="row g-3 mb-3">
+    <div class="col-lg-2 col-md-4">
+        <select class="form-select" name="Category" asp-for="Category" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            <option value="Fiction">Fiction</option>
+            <option value="NonFiction">Non-Fiction</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Thriller">Thriller</option>
+            <option value="ScienceFiction">Science Fiction</option>
+            <option value="Fantasy">Fantasy</option>
+        </select>
+    </div>
+    <div class="col-lg-2 col-md-4">
+        <select class="form-select" name="AgeRating" asp-for="AgeRating" onchange="this.form.submit()">
+            <option value="8">All Ratings</option>
+            <option value="8">+8</option>
+            <option value="12">+12</option>
+            <option value="16">+16</option>
+            <option value="18">+18</option>
+        </select>
+    </div>
+    <div class="col-lg-2 col-md-4">
+        <select class="form-select" name="Sort" asp-for="Sort" onchange="this.form.submit()">
+            <option value="newest">Order By Newest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_disc">Price: High to Low</option>
+        </select>
+    </div>
+    <div class="col-lg-6 col-md-12 d-flex">
+        <input class="form-control me-2" name="Search" asp-for="Search" placeholder="Search by Name" />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </div>
+</form>
+
+<div class="row mb-5 g-3">
+    @if (ViewBag.Books != null && ViewBag.Books.Count > 0)
+    {
+        foreach (var book in ViewBag.Books as List<Book>)
+        {
+            var hasDiscount = book.DiscountStartDate.HasValue && (DateTime.Now - book.DiscountStartDate.Value).TotalDays <= 7;
+
+            <div class="col-lg-3 col-md-6">
+                <div class="rounded border shadow p-3 text-center h-100">
+                    <img src="/Books-cover/@book.CoverImagePath" class="img-fluid" alt="..." style="height:180px; object-fit:contain" />
+                    <hr />
+                    <h5 class="py-2">@book.Title</h5>
+                    <p>Author: @book.Author, Category: @book.Category</p>
+                    <h4 class="mb-3">
+                        @if (hasDiscount)
+                        {
+                            <span class="text-muted text-decoration-line-through">@book.PreviousPrice $</span>
+                            <span class="text-danger">@book.PriceBuy $</span>
+                        }
+                        else
+                        {
+                            <span>@book.PriceBuy $</span>
+                        }
+                    </h4>
+                </div>
             </div>
-        </div>
+        }
+    }
+    else
+    {
+        <h4 class="text-center">No books found.</h4>
     }
 </div>
 
-
 <nav>
     <ul class="pagination">
-        @for (int i = 1; i <= ViewBag.totalPages; i++)
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
         {
-            string active = "";
-            if (i == ViewBag.pageIndex) active = "active";
-            <li class="page-item @active"><a class="page-link" asp-route-pageIndex="@i">@i</a></li>
+            string active = i == ViewBag.PageIndex ? "active" : "";
+            <li class="page-item @active">
+                <a class="page-link"
+                   asp-route-pageIndex="@i"
+                   asp-route-search="@Model.Search"
+                   asp-route-sort="@Model.Sort"
+                   asp-route-category="@Model.Category"
+                   asp-route-ageRating="@Model.AgeRating">@i</a>
+            </li>
         }
     </ul>
 </nav>

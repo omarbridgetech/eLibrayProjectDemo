@@ -13,33 +13,62 @@ namespace eLibrayProjectDemo.Controllers
         {
             this.context = context;
         }
-        public IActionResult Index(int pageIndex)
+
+        public IActionResult Index(int pageIndex = 1, string? search = "", string? category = "", int ageRating = 8, string? sort = "newest")
         {
-            //var books=context.Books.OrderByDescending(p=>p.EbookId).ToList();
+            IQueryable<Book> query = context.Books;
 
-            //ViewBag.Books=books;
+            // Search functionality
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(p => p.Title.Contains(search) || p.Author.Contains(search) || p.Publisher.Contains(search));
+            }
 
-            IQueryable<Book>query=context.Books;
-            query = query.OrderByDescending(p => p.EbookId);
+            // Filter by category
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                query = query.Where(p => p.Category == category);
+            }
 
-            //pagination functionalty
+            // Filter by age rating
+            if (ageRating != 8) // Default is 8 (All Ratings)
+            {
+                query = query.Where(p => p.AgeRating == ageRating);
+            }
+
+            // Sort functionality
+            query = sort switch
+            {
+                "price_asc" => query.OrderBy(p => p.PriceBuy),
+                "price_disc" => query.OrderByDescending(p => p.PriceBuy),
+                _ => query.OrderByDescending(p => p.EbookId) // Default: newest
+            };
+
+            // Pagination
             if (pageIndex < 1)
             {
                 pageIndex = 1;
             }
 
-            decimal count=query.Count();
-            int totalPages=(int)Math.Ceiling(count/pageSize);
-            query=query.Skip((pageIndex-1)*pageSize).Take(pageSize);
+            decimal count = query.Count();
+            int totalPages = (int)Math.Ceiling(count / pageSize);
+            query = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
 
+            // Fetch books
             var books = query.ToList();
 
             ViewBag.TotalPages = totalPages;
-            ViewBag.PageIndex=pageIndex;
-            ViewBag.Books=books;
-            return View(books);
+            ViewBag.PageIndex = pageIndex;
+            ViewBag.Books = books;
 
-            
+            // Return the same model
+            return View(new LibarySearchModel
+            {
+                Search = search,
+                Sort = sort,
+                Category = category,
+                AgeRating = ageRating
+            });
         }
     }
 }
