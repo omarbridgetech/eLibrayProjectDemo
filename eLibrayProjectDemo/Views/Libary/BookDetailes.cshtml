@@ -1,0 +1,133 @@
+﻿@model Book
+
+@{
+    ViewData["Title"] = @Model.Title;
+
+    // Calculate the discount end time if applicable
+    DateTime? discountEndDate = null;
+    if (Model.DiscountStartDate.HasValue && (DateTime.Now - Model.DiscountStartDate.Value).TotalDays <= 7)
+    {
+        discountEndDate = Model.DiscountStartDate.Value.AddDays(7);
+    }
+}
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Book Cover Section -->
+        <div class="col-md-4 text-center">
+            <img src="~/Books-cover/@Model.CoverImagePath" class="img-fluid mb-3" alt="Book Cover" width="250" />
+        </div>
+
+        <!-- Book Details Section -->
+        <div class="col-md-8">
+            <!-- Book Title in Bold and Large Font -->
+            <h1 class="display-4 fw-bold mb-3">@Model.Title</h1>
+            <h4 class="text-muted mb-3">By @Model.Author</h4>
+            <h5 class="text-muted mb-3">Category: @Model.Category</h5>
+
+            <!-- Price Section -->
+            @if (discountEndDate.HasValue)
+            {
+                <h3 class="mb-3">
+                    <span class="text-decoration-line-through text-muted">@Model.PreviousPrice $</span>
+                    <span class="text-danger">@Model.PriceBuy $</span>
+                </h3>
+                <p class="text-warning">
+                    <i class="bi bi-clock"></i>
+                    Discount ends in:
+                    <span id="discount-timer"></span>
+                </p>
+            }
+            else
+            {
+                <h3 class="mb-3">@Model.PriceBuy $</h3>
+            }
+
+            @if (!Model.IsBuyOnly)
+            {
+                <h4 class="text-muted mb-3">Price to Borrow: @Model.PriceBorrow $</h4>
+            }
+
+            <!-- Buttons -->
+            <div>
+                @if (Model.IsBuyOnly)
+                {
+                    <span class="text-danger d-block mb-3">This book is for buy only. You cannot borrow it.</span>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-outline-warning btn-lg me-2">
+                        Borrow <i class="bi bi-cart4"></i>
+                    </button>
+                }
+
+                <button type="button" class="btn btn-primary btn-lg me-2">
+                    Add to Cart <i class="bi bi-cart4"></i>
+                </button>
+
+                <!-- Back to Library Button -->
+                <a class="btn btn-secondary btn-lg" href="/Libary/Index" role="button">
+                    Back to Library
+                </a>
+            </div>
+
+            <hr />
+
+            <!-- Additional Book Details -->
+            <div class="row mb-3">
+                <div class="col-sm-4 fw-bold">Publisher:</div>
+                <div class="col-sm-8">@Model.Publisher</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-4 fw-bold">Publication Year:</div>
+                <div class="col-sm-8">@Model.PublicationYear</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-4 fw-bold">Age Rating:</div>
+                <div class="col-sm-8">+@Model.AgeRating</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-4 fw-bold">Available Copies:</div>
+                <div class="col-sm-8">@Model.AvailableCopies</div>
+            </div>
+
+            <div class="fw-bold">Description:</div>
+            <p>@Model.Description</p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Live Countdown -->
+@if (discountEndDate.HasValue)
+{
+    <script>
+        const discountEndTime = new Date('@discountEndDate.Value.ToString("yyyy-MM-ddTHH:mm:ss")').getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const timeLeft = discountEndTime - now;
+
+            if (timeLeft <= 0) {
+                document.getElementById('discount-timer').innerHTML = "Expired";
+                return;
+            }
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('discount-timer').innerHTML =
+                `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
+        }
+
+        // Update every second
+        setInterval(updateTimer, 1000);
+
+        // Initialize the timer
+        updateTimer();
+    </script>
+}
