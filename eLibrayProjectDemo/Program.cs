@@ -1,4 +1,6 @@
+using eLibrayProjectDemo.Models;
 using eLibrayProjectDemo.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultCoection");
     options.UseSqlServer(connectionString);
 });
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.Password.RequireUppercase = false;
+
+    }).AddEntityFrameworkStores<AppDbContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
