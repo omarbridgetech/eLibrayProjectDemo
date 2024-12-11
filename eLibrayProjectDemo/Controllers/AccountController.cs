@@ -69,5 +69,15 @@ namespace eLibrayProjectDemo.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Login()
+        {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View();
+        }
     }
 }
