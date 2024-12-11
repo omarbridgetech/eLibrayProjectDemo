@@ -6,7 +6,7 @@ using Microsoft.SqlServer.Server;
 
 namespace eLibrayProjectDemo.Controllers
 {
-    [Route("/Admin/[controller]/{action=Index}/{id?}")]
+    [Route("/Admin/[controller]/{action=Register}/{id?}")]
     public class BookController : Controller
     {
         private readonly AppDbContext contex;
@@ -220,7 +220,7 @@ namespace eLibrayProjectDemo.Controllers
             //save the changes
             contex.SaveChanges();   
 
-            return RedirectToAction("Index", "Book");
+            return RedirectToAction("Register", "Book");
         }
 
         public IActionResult EditBook(int id)
@@ -229,7 +229,7 @@ namespace eLibrayProjectDemo.Controllers
             var book = contex.Books.Find(id);
 
             if (book == null) {
-                return RedirectToAction("Index", "Book");
+                return RedirectToAction("Register", "Book");
             }
 
             var bookDto = new BookDto()
@@ -263,7 +263,7 @@ namespace eLibrayProjectDemo.Controllers
         {
             var book = contex.Books.Find(id);
             if (book == null) {
-                return RedirectToAction("Index", "Book");
+                return RedirectToAction("Register", "Book");
 
             }
 
@@ -310,7 +310,7 @@ namespace eLibrayProjectDemo.Controllers
             book.CoverImagePath = newFileName;
 
             contex.SaveChanges();
-            return RedirectToAction("Index", "Book");
+            return RedirectToAction("Register", "Book");
 
 
 
@@ -324,14 +324,14 @@ namespace eLibrayProjectDemo.Controllers
 
             if (book == null)
             {
-                return RedirectToAction("Index", "Book");
+                return RedirectToAction("Register", "Book");
             }
 
             string imageFullPath = environment.WebRootPath + "/Books-cover/" + book.CoverImagePath;
             System.IO.File.Delete(imageFullPath);
             contex.Books.Remove(book);
             contex.SaveChanges(true);
-            return RedirectToAction("Index", "Book");
+            return RedirectToAction("Register", "Book");
 
 
 
@@ -344,7 +344,7 @@ namespace eLibrayProjectDemo.Controllers
             var book = contex.Books.Find(id);
             if (book == null)
             {
-                return RedirectToAction("Index", "Book");
+                return RedirectToAction("Register", "Book");
             }
 
             // Create a BookDto and populate it with the current data
@@ -374,7 +374,7 @@ namespace eLibrayProjectDemo.Controllers
             var book = contex.Books.Find(id);
             if (book == null)
             {
-                return RedirectToAction("Index", "Book");
+                return RedirectToAction("Register", "Book");
             }
 
             if (!ModelState.IsValid)
@@ -400,7 +400,7 @@ namespace eLibrayProjectDemo.Controllers
 
             // Save the changes
             contex.SaveChanges();
-            return RedirectToAction("Index", "Book");
+            return RedirectToAction("Register", "Book");
         }
 
 

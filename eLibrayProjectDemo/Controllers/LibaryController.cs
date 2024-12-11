@@ -75,7 +75,7 @@ namespace eLibrayProjectDemo.Controllers
         {
             var book = context.Books.Find(bookId);
             if (book == null) {
-                return RedirectToAction("Index", "Libary");
+                return RedirectToAction("Register", "Libary");
             
             }
 
