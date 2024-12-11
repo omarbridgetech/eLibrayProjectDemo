@@ -56,9 +56,18 @@
                 }
                 else
                 {
-                    <button type="button" class="btn btn-outline-warning btn-lg me-2">
-                        Borrow <i class="bi bi-cart4"></i>
-                    </button>
+                    @if (Model.AvailableCopies > 0)
+                    {
+                        <button type="button" class="btn btn-outline-warning btn-lg me-2">
+                            Borrow <i class="bi bi-cart4"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <a href="#" class="text-danger d-block mb-3" style="text-decoration: underline;">
+                            This book is out of stock. Check waiting list.
+                        </a>
+                    }
                 }
 
                 <button type="button" class="btn btn-primary btn-lg me-2">
