@@ -1,11 +1,13 @@
 ﻿using eLibrayProjectDemo.Models;
 using eLibrayProjectDemo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 
 namespace eLibrayProjectDemo.Controllers
 {
+    [Authorize(Roles ="admin")]
     [Route("/Admin/[controller]/{action=Register}/{id?}")]
     public class BookController : Controller
     {
