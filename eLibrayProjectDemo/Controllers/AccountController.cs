@@ -17,12 +17,22 @@ namespace eLibrayProjectDemo.Controllers
         }
         public IActionResult Register()
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (!ModelState.IsValid) { 
                 return View(registerDto);
             }
@@ -78,6 +88,34 @@ namespace eLibrayProjectDemo.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(loginDto);
+            }
+
+            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password,
+                loginDto.RememberMe, false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Invalid login attempt.";
+            }
+
+            return View(loginDto);
         }
     }
 }
